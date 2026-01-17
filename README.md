@@ -24,6 +24,6 @@ Step-2: Create project structure
 
 
 # Commands
-uv init
-uv sync
-uv pip list
+- uv init
+- uv sync
+- uv pip list
