@@ -1,0 +1,13 @@
+[project]
+name = "ai-swing-trading"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "pandas",
+    "numpy",
+    "yfinance",
+]
