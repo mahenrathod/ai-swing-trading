@@ -62,3 +62,89 @@ def sanitize_for_json(df: pd.DataFrame) -> pd.DataFrame:
             float("-inf"): None,
         }
     )
+
+
+
+# second code base
+
+
+def fetch_price_data(
+    ticker: str,
+    period: str = "6mo",
+    interval: str = "1d",
+    auto_adjust: bool = True
+) -> pd.DataFrame:
+    """
+    Fetch historical price data for a given ticker.
+
+    This is the core market data source for Layer 1 (Momentum).
+
+    Args:
+        ticker: Stock ticker symbol (e.g., "NVDA")
+        period: Lookback window (e.g., "3mo", "6mo", "1y")
+        interval: Data frequency ("1d", "1h", etc.)
+        auto_adjust: Use adjusted prices (dividends/splits)
+
+    Returns:
+        Cleaned pandas DataFrame with OHLCV data.
+    """
+
+    ticker = ticker.upper().strip()
+
+    df = yf.download(
+        tickers=ticker,
+        period=period,
+        interval=interval,
+        auto_adjust=auto_adjust,
+        progress=False
+    )
+
+    if df is None or df.empty:
+        raise ValueError(f"No price data found for ticker: {ticker}")
+
+    # Standardize column names (helpful downstream)
+    df = df.rename(columns={
+        "Open": "open",
+        "High": "high",
+        "Low": "low",
+        "Close": "close",
+        "Volume": "volume"
+    })
+
+    # Ensure index is datetime
+    df.index = pd.to_datetime(df.index)
+
+    # Sort by time (oldest → newest)
+    df = df.sort_index()
+
+    return df
+
+
+def get_latest_bar(df: pd.DataFrame) -> pd.Series:
+    """
+    Return the most recent daily bar.
+    Useful for signals / UI display.
+    """
+    if df is None or df.empty:
+        raise ValueError("Empty DataFrame passed to get_latest_bar()")
+
+    return df.iloc[-1]
+
+
+def ensure_minimum_history(
+    df: pd.DataFrame,
+    min_days: int = 200
+) -> pd.DataFrame:
+    """
+    Ensure we have enough history for 200DMA calculations.
+
+    If not enough data, raise an error.
+    """
+
+    if len(df) < min_days:
+        raise ValueError(
+            f"Insufficient history: got {len(df)} days, "
+            f"need at least {min_days} days"
+        )
+
+    return df
