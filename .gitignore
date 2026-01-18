@@ -1,3 +1,4 @@
 anaconda_projects/
 .env/
 .DS_Store/
+__pycache__/
