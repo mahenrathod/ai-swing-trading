@@ -1,13 +1,52 @@
 [project]
 name = "ai-swing-trading"
 version = "0.1.0"
-description = "Add your description here"
+description = "AI Swing Trading Platform"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 dependencies = [
     "fastapi",
     "uvicorn",
     "pandas",
     "numpy",
     "yfinance",
+    "pydantic"
 ]
+
+[project.optional-dependencies]
+# Add these later when we build Layer 2 (RAG)
+rag = [
+    "openai>=1.0",
+    "pinecone-client>=3.0",
+    "langchain>=0.1",
+    "langchain-openai>=0.0.5",
+]
+
+# Add these later when we build Layer 3 (Agents)
+agents = [
+    "crewai>=0.1",
+    "langgraph>=0.0.10",
+]
+
+# Development tools (nice to have)
+dev = [
+    "pytest>=7.4",
+    "black>=24.1",
+    "ruff>=0.1",
+    "mypy>=1.8",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+# This tells Python where your package lives (src layout)
+packages = ["src/aist"]
+
+[tool.uv]
+# Ensures reproducible installs
+locked = true
+
+# Optional: keep virtualenv in project root
+venv = ".venv"

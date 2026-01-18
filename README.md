@@ -27,3 +27,4 @@ Step-2: Create project structure
 - uv init
 - uv sync
 - uv pip list
+- uv run uvicorn src.aist.main:app --reload
