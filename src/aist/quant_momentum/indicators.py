@@ -5,27 +5,15 @@ import pandas as pd
 
 def add_moving_averages(df: pd.DataFrame) -> pd.DataFrame:
     print(f"--- Adding moving averages")
-    # df = df.copy()
-    # print(f"--- DataFrame size: {df.shape[0]} rows x {df.shape[1]} columns")
-    # print(f"--- Available columns: {list(df.columns)}")
-    # for col in df.columns:
-    #     print(f"  - Column: '{col}' (type: {type(col).__name__})")
-
     if "close" in df.columns:
         print("Contains 'close' column")
     else:
         raise KeyError(f"'close' column not found. Available columns: {list(df.columns)}")
 
-    print(f"--- Adding 20 day moving average")
-    df["ma20"] = df["close"].rolling(20).mean()
-    # print(f"--- 20 day moving average: {df['ma20']}")
-    print(f"--- Adding 50 day moving average")
-    df["ma50"] = df["close"].rolling(50).mean()
-    print(f"--- Adding 150 day moving average")
-    df["ma150"] = df["close"].rolling(150).mean()
     print(f"--- Adding 200 day moving average")
-    df["ma200"] = df["close"].rolling(200).mean()
-
+    df["ma200"] = df["close"].rolling(window=200).mean()
+    print(f"--- 200 day moving average: {df['ma200']}")
+    print("|*************")
     for col in df.columns:
         print(f"  - Column: '{col}' (type: {type(col).__name__})")
 
@@ -78,3 +66,10 @@ def compute_trend_score(df: pd.DataFrame) -> float:
     # return round((dist_score * 0.6 + slope_score * 0.4), 3)
     print(f"price: {price}, ma200: {ma200}")
     return price;
+
+def compute_moving_average(df: pd.DataFrame, dma: int = 20) -> pd.DataFrame:
+
+    print(f"compute_moving_averages... {dma}")
+    ma = df["close"].rolling(window=dma).mean().iloc[-1]
+    print(f"ma: {ma}")
+    return ma

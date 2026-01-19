@@ -8,7 +8,8 @@ from aist.quant_momentum.data import (
 from aist.quant_momentum.indicators import (
     add_moving_averages, 
     compute_relative_strength, 
-    compute_trend_score
+    compute_trend_score,
+    compute_moving_average
 )
 
 from aist.quant_momentum.signals import (
@@ -103,16 +104,17 @@ def analyze_stock_layer1_and_2(ticker: str):
 
 def analyze_stock_full_pipeline(ticker: str):
     # -------- Layer 1 --------
-    df = fetch_price_data(ticker, period="11mo")
+    # df = fetch_price_data(ticker, period="11mo")
+    df = get_price_data(ticker, period="12mo")
     df = sanitize_for_json(df)
     df = ensure_minimum_history(df)
+
     latest = get_latest_bar(df)
-    print(latest["close"])
     last_close = float(latest["close"]) if latest["close"] is not None else None
 
-    print(f"last_close: {last_close}")
     # (Placeholder for now -- we'll computer release 200DMA/breakout later)
-    dma_200 = 180.00
+    dma_200 = compute_moving_average(df, 200)
+    print(f"------ dma_200: {dma_200}")
     breakout = None
     volume_score = None
     
@@ -123,17 +125,11 @@ def analyze_stock_full_pipeline(ticker: str):
         volume_score=volume_score,
     )
 
-    print(f"tech_view: {tech_view}")
-
     # -------- Layer 2 --------     
     query = f"{ticker.upper()} earnings, news, sector, macro, playbook"
-    print(query)
     retrieved_docs = retrieve_context(query, top_k=4)
-    print(f"retrieved_docs: {retrieved_docs}")
     rag_summary = summarize_for_trading(retrieved_docs)
-    print(f"rag_summary: {rag_summary}")
     context_view = context_assessment(rag_summary)
-    print(f"context_view: {context_view}")
 
     # -------- Layer 3 --------
     decision = final_decision(
@@ -142,11 +138,11 @@ def analyze_stock_full_pipeline(ticker: str):
         tech=tech_view,
         context=context_view,
     )
-    print(f"decision: {decision}")
     
     return {
         "ticker": ticker.upper(),
         "last_close": last_close,
+        "dma_200": round(dma_200, 2),
         "layer1_technical": tech_view,
         "layer2_rag": rag_summary,
         "layer3_decision": decision,
