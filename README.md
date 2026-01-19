@@ -24,10 +24,10 @@ Step-2: Create project structure
 
 # Architecture
 
-Layer 1 (quant_momentum)
+## Layer 1 (quant_momentum)
 - Price, 200DMA, breakout, volume
         
-Layer 2 (RAG)   
+## Layer 2 (RAG)   
 - Create a pipeline that:
     - Collects documents: Earnings transcripts, News articles, Sector reports, Your trading notes
     - Chunks them into small pieces
@@ -96,8 +96,41 @@ src/
     └── main.py
 ```
 
-Layer 3 (Agents) 
+## Layer 3 (Agents) 
 - Entry, Stop, Target
+- Agent Architecture (Clean Design)
+
+We’ll implement three cooperating agents (simple, understandable, and extensible).
+
+🤖 Agent 1 — Technical Agent (Momentum)
+
+- Inputs: 
+  - Price data, 
+  - 200DMA, 
+  - Breakout signal, 
+  - Volume
+- Output: 
+  - Technical bias: bullish / neutral / bearish
+  - Suggested entry band (from price structure)
+
+🤖 Agent 2 — Context Agent (RAG)
+- Inputs: 
+  - RAG summary (earnings + news + sector + playbook)
+- Output: 
+  - Fundamental/narrative bias: bullish / neutral / bearish
+  - Key risks
+
+🤖 Agent 3 — Decision Agent (Final Arbiter / CEO Agent)
+- Inputs: 
+  - Technical bias, 
+  - RAG bias, 
+  - Latest price
+- Output: 
+  - BUY / HOLD / PASS, 
+  - Entry, 
+  - Stop, 
+  - Target
+  - Explanation: 
 
 # Commands
 - uv init

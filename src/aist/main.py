@@ -1,3 +1,4 @@
+from aist.orchestrator import analyze_stock_full_pipeline
 from fastapi import FastAPI, HTTPException
 import uvicorn
 from aist.orchestrator import (
@@ -15,7 +16,8 @@ def read_root():
 def analyze(ticker: str):
     try:
         # result = analyze_stock_layer1(ticker)
-        result = analyze_stock_layer1_and_2(ticker)
+        # result = analyze_stock_layer1_and_2(ticker)
+        result = analyze_stock_full_pipeline(ticker)
         return result
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
