@@ -18,8 +18,8 @@ from aist.quant_momentum.signals import (
     is_above_200dma
 )
 
-from aist.rag.retriever import retrieve_context
-from aist.rag.summarizer import summarize_for_trading
+from aist.rag.v1.retriever import retrieve_context_v1
+from aist.rag.v1.summarizer import summarize_for_trading_v1
 
 from aist.agents.technical_agent import technical_assessment
 from aist.agents.context_agent import context_assessment
@@ -27,6 +27,9 @@ from aist.agents.decision_agent import final_decision
 
 
 from aist.models import Layer1Result
+
+from aist.rag.v2.retriever import retrieve_context_v2
+from aist.rag.v2.summarizer import summarize_for_trading_v2
 
 def analyze_stock_layer1(ticker: str) -> Layer1Result:
     ticker = ticker.upper()
@@ -86,10 +89,10 @@ def analyze_stock_layer1_and_2(ticker: str):
     query = f"{ticker.upper()} earnings, news, sector, macro, playbook"
     print(query)
 
-    retrieved_docs = retrieve_context(query, top_k=4)
+    retrieved_docs = retrieve_context_v1(query, top_k=4)
     print(retrieved_docs)
     
-    rag_summary = summarize_for_trading(retrieved_docs)
+    rag_summary = summarize_for_trading_v1(retrieved_docs)
     print(rag_summary)
 
     return {
@@ -102,7 +105,7 @@ def analyze_stock_layer1_and_2(ticker: str):
         "rag_summary": rag_summary,
     }
 
-def analyze_stock_full_pipeline(ticker: str):
+def analyze_stock_full_pipeline_v1(ticker: str):
     # -------- Layer 1 --------
     # df = fetch_price_data(ticker, period="11mo")
     df = get_price_data(ticker, period="12mo")
@@ -127,8 +130,8 @@ def analyze_stock_full_pipeline(ticker: str):
 
     # -------- Layer 2 --------     
     query = f"{ticker.upper()} earnings, news, sector, macro, playbook"
-    retrieved_docs = retrieve_context(query, top_k=4)
-    rag_summary = summarize_for_trading(retrieved_docs)
+    retrieved_docs = retrieve_context_v1(query, top_k=4)
+    rag_summary = summarize_for_trading_v1(retrieved_docs)
     context_view = context_assessment(rag_summary)
 
     # -------- Layer 3 --------
@@ -147,4 +150,9 @@ def analyze_stock_full_pipeline(ticker: str):
         "layer2_rag": rag_summary,
         "layer3_decision": decision,
     }
-    
+
+def analyze_stock_full_pipeline_v2(ticker: str):
+    query = f"{ticker.upper()} earnings outlook and rence news"
+    docs = retrieve_context_v2(query, top_k=10)
+    rag_summary = summarize_for_trading_v2(docs)
+    return rag_summary

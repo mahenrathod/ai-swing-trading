@@ -1,16 +1,16 @@
 from typing import List, Dict
 import numpy as np
 
-from aist.rag.ingestion import load_sample_corpus
-from aist.rag.embeddings import embed_corpus, embed_text
-from aist.rag.vector_store import LocalVectorStore
+from aist.rag.v1.ingestion import load_sample_corpus
+from aist.rag.v1.embeddings import embed_corpus, embed_text
+from aist.rag.v1.vector_store import LocalVectorStore
 
 # Build RAG index once (simple demo)
 _DOCS = load_sample_corpus()
 _VECTORS, _VOCAB = embed_corpus(_DOCS)
 _VECTOR_STORE = LocalVectorStore(_DOCS, _VECTORS)
 
-def retrieve_context(query: str, top_k: int = 3) -> List[Dict]:
+def retrieve_context_v1(query: str, top_k: int = 3) -> List[Dict]:
     """
     Given a query (e.g., "NVDA earnings"), retrieve top_k most relevant documents.
     """

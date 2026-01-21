@@ -1,6 +1,6 @@
 from typing import List, Dict
 
-def summarize_for_trading(results: List[Dict]) -> Dict:
+def summarize_for_trading_v1(results: List[Dict]) -> Dict:
     """
     Convert retrieved documents into a structured trading-friendly summary.
     """

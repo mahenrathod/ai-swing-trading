@@ -132,8 +132,36 @@ We’ll implement three cooperating agents (simple, understandable, and extensib
   - Target
   - Explanation: 
 
+
+# Phase-2: Real RAG Architecture
+
+
+🧠 Layer 2 — Real RAG Architecture (What we’re building)
+```
+┌────────────┐
+│  Query     │  → "NVDA earnings and recent news"
+└─────┬──────┘
+      ↓
+┌────────────┐
+│ Retriever  │  → Fetch real news (Yahoo Finance)
+└─────┬──────┘
+      ↓
+┌────────────┐
+│ Embeddings │  → SentenceTransformers
+└─────┬──────┘
+      ↓
+┌────────────┐
+│ Vector DB  │  → FAISS (local, fast)
+└─────┬──────┘
+      ↓
+┌────────────┐
+│ Summarizer │  → LLM-ready structured output
+└────────────┘
+```
+
 # Commands
 - uv init
 - uv sync
 - uv pip list
 - uv run uvicorn src.aist.main:app --reload
+- uv add sentence-transformers faiss-cpu yfinance numpy 
